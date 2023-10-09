@@ -34,7 +34,7 @@ export const DigitrafficProvider : React.FC<Props> = (props : Props) : React.Rea
     }
 
     const fetchTrains = async (stationShort : string) : Promise<Train[]> => {
-        const fetchResult = await fetch(`${ApiUrl}live-trains/station/${stationShort}?minutes_before_departure=1440&minutes_after_departure=0&minutes_before_arrival=100&minutes_after_arrival=0`);
+        const fetchResult = await fetch(`${ApiUrl}live-trains/station/${stationShort}?minutes_before_departure=1440&minutes_after_departure=0&minutes_before_arrival=100&minutes_after_arrival=0&train_categories=Commuter,Long-distance`);
         let fetchedTrains = await fetchResult.json();
         console.log(fetchedTrains.length)
         setTrains(fetchedTrains);
@@ -43,13 +43,15 @@ export const DigitrafficProvider : React.FC<Props> = (props : Props) : React.Rea
 
     const getStationName = (stationShort : string) : string => {
         let matchingStation = stations.find((station : Station) => station.stationShortCode === stationShort);
-        let stationName : string = "";
-        if(matchingStation!.stationName.endsWith(" asema")) {
-            stationName = matchingStation!.stationName.split(" ")[0];
-        } else {
-            stationName = matchingStation!.stationName
+        let stationName : string = stationShort;
+        if(matchingStation !== undefined) {
+            if(matchingStation.stationName.endsWith(" asema")) {
+                stationName = matchingStation.stationName.split(" ")[0];
+            } else {
+                stationName = matchingStation.stationName
+            }
         }
-        return matchingStation ? stationName : "No matching station";
+        return stationName;
     }
 
     useEffect(() => {

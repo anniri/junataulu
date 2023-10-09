@@ -27,6 +27,7 @@ const StationTrainList : React.FC<Props> = ({stationShort}: {stationShort : stri
         }
 
         let trainOnStation = train.timeTableRows.find((timeTable : TimeTableRow) => timeTable.stationShortCode === stationShort && timeTable.type === "DEPARTURE");
+
         return {
             trainName: trainName,
             trainCategory: train.trainCategory,
@@ -41,11 +42,14 @@ const StationTrainList : React.FC<Props> = ({stationShort}: {stationShort : stri
     }
 
     return (
-                <FlatList 
-                    data={trains}
-                    renderItem={({item}) => {return (<TrainListItem trainStopData={formTrainStopData(item)} />)}}
-                    
+            (trains.length > 0) 
+            ? <FlatList 
+                data={trains}
+                renderItem={({item}) => {return (<TrainListItem trainStopData={formTrainStopData(item)} />)}}
                 />
+            : <></>
+        
+
     )
 }
 
