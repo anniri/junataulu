@@ -1,12 +1,17 @@
 import {useContext, useState} from 'react';
 import { DigitrafficContext, Station } from '../context/DigitrafficContext';
 import { List, Text, TextInput } from 'react-native-paper';
-import {ScrollView} from 'react-native';
-import { Link } from 'expo-router';
+import {Pressable, ScrollView} from 'react-native';
+import { Link, router } from 'expo-router';
 
 const StationList : React.FC = () : React.ReactElement => {
-    const {stations} = useContext(DigitrafficContext);
+    const {stations, fetchTrains, setTrains} = useContext(DigitrafficContext);
     const [stationNameFilter, setStationNameFilter] = useState<string>("")
+
+    const openStation = (stationShort : string) : void => {
+        setTrains([]);
+        router.push(`/station/${stationShort}`);
+    }
 
     return (
         <ScrollView>
@@ -23,7 +28,9 @@ const StationList : React.FC = () : React.ReactElement => {
                     <List.Item
                         key={station.stationShortCode} 
                         title={() => {return(
-                          <Link href={`/station/${station.stationShortCode}`}><Text>{station.stationName}</Text></Link>
+                            <Pressable onPress={() => openStation(station.stationShortCode)}>
+                                <Text>{station.stationName}</Text>
+                            </Pressable>
                         )}} 
                     />
                 )

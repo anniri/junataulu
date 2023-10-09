@@ -33,14 +33,23 @@ export const DigitrafficProvider : React.FC<Props> = (props : Props) : React.Rea
         setStations(allStations.filter((station : Station) => {return (station.passengerTraffic && station.countryCode === "FI")}));
     }
 
-    const fetchTrains = async (stationShort : string) : Promise<void> => {
-        const fetchResult = await fetch(`${ApiUrl}live-trains/station/${stationShort}?departing_trains=10&include_nonstopping=false&train_categories=Commuter,Long-distance`);
-        setTrains(await fetchResult.json());
+    const fetchTrains = async (stationShort : string) : Promise<Train[]> => {
+        const fetchResult = await fetch(`${ApiUrl}live-trains/station/${stationShort}?minutes_before_departure=1440&minutes_after_departure=0&minutes_before_arrival=100&minutes_after_arrival=0`);
+        let fetchedTrains = await fetchResult.json();
+        console.log(fetchedTrains.length)
+        setTrains(fetchedTrains);
+        return fetchedTrains;
     }
 
     const getStationName = (stationShort : string) : string => {
         let matchingStation = stations.find((station : Station) => station.stationShortCode === stationShort);
-        return matchingStation ? matchingStation.stationName : "No matching station";
+        let stationName : string = "";
+        if(matchingStation!.stationName.endsWith(" asema")) {
+            stationName = matchingStation!.stationName.split(" ")[0];
+        } else {
+            stationName = matchingStation!.stationName
+        }
+        return matchingStation ? stationName : "No matching station";
     }
 
     useEffect(() => {
@@ -48,7 +57,7 @@ export const DigitrafficProvider : React.FC<Props> = (props : Props) : React.Rea
     }, [])
 
     return (
-        <DigitrafficContext.Provider value={{stations, fetchTrains, trains, getStationName}}>
+        <DigitrafficContext.Provider value={{stations, fetchTrains, trains, setTrains, getStationName}}>
             {props.children}
         </DigitrafficContext.Provider>
     )

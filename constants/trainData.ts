@@ -17,7 +17,7 @@ export interface Train {
     timeTableRows: TimeTableRow[]
 }
 
-interface TimeTableRow {
+export interface TimeTableRow {
     trainStopping: boolean
     stationShortCode: string
     countryCode: string     //FI or RU
