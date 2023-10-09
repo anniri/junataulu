@@ -36,7 +36,16 @@ const StationTrainList : React.FC<Props> = ({stationShort}: {stationShort : stri
             stationFrom: getStationName(train.timeTableRows[0].stationShortCode),
             timeTableRow: train.timeTableRows.find((timeTable : TimeTableRow) => 
                                                     timeTable.stationShortCode === stationShort && timeTable.type === "DEPARTURE"
-                                                ) || "no data",
+                                                ) || {
+                                                    trainStopping: true,
+                                                    stationShortCode: "",
+                                                    countryCode: "fi",
+                                                    type: "",
+                                                    cancelled: false,
+                                                    scheduledTime: "",
+                                                    causes: [],
+                                                    trainReady: {source: "", accepted: false, timestamp: ""}
+                                                },
             showDepOrArr: false
         }
     }

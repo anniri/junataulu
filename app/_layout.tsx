@@ -53,7 +53,7 @@ function RootLayoutNav() {
         <PaperProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="station/[stationShort]" options={{ presentation: "modal", title: "Asematiedot" }} />
+          <Stack.Screen name="station/[stationShort]" options={{ presentation: "modal", title: "Junat 24h" }} />
         </Stack>
         </PaperProvider>
       </ThemeProvider>

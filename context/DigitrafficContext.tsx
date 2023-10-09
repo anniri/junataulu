@@ -34,7 +34,7 @@ export const DigitrafficProvider : React.FC<Props> = (props : Props) : React.Rea
     }
 
     const fetchTrains = async (stationShort : string) : Promise<Train[]> => {
-        const fetchResult = await fetch(`${ApiUrl}live-trains/station/${stationShort}?minutes_before_departure=1440&minutes_after_departure=0&minutes_before_arrival=100&minutes_after_arrival=0&train_categories=Commuter,Long-distance`);
+        const fetchResult = await fetch(`${ApiUrl}live-trains/station/${stationShort}?minutes_before_departure=1440&minutes_after_departure=0&minutes_before_arrival=0&minutes_after_arrival=0&train_categories=Commuter,Long-distance`);
         let fetchedTrains = await fetchResult.json();
         console.log(fetchedTrains.length)
         setTrains(fetchedTrains);
