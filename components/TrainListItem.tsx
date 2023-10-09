@@ -33,7 +33,6 @@ const TrainListItem : React.FC<Props> = ({trainStopData}: {trainStopData : Train
     let stationFrom = train.timeTableRows[0];
     let stationTo = train.timeTableRows[train.timeTableRows.length - 1];*/
 
-
     return (
         <View>
             <Text>{trainStopData.trainName} ({trainStopData.stationFrom}-{trainStopData.stationTo})</Text>
