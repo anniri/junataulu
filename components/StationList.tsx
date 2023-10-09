@@ -1,6 +1,6 @@
 import {useContext, useState} from 'react';
 import { DigitrafficContext, Station } from '../context/DigitrafficContext';
-import { List, Text, TextInput } from 'react-native-paper';
+import { List, Searchbar, Text, TextInput } from 'react-native-paper';
 import {Pressable, ScrollView, View} from 'react-native';
 import { Link, router } from 'expo-router';
 import { TouchableHighlight } from 'react-native-gesture-handler';
@@ -21,11 +21,11 @@ const StationList : React.FC = () : React.ReactElement => {
 
     return (
         <View>
-            <TextInput 
-                label="Hae aseman nimellä"
+            <Searchbar 
+                placeholder="aseman nimi"
                 value={stationNameFilter}
                 onChangeText={(text : string) => setStationNameFilter(text)}
-                style={{width: "100%"}}
+                style={{margin: 2}}
             />
             <ScrollView>
                 <List.Section>
