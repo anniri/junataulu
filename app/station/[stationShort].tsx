@@ -1,15 +1,17 @@
 import { useLocalSearchParams } from "expo-router";
-import { Text, View } from '../../components/Themed';
+import { View } from '../../components/Themed';
 import StationTrainList from "../../components/StationTrainList";
-
+import {useContext} from 'react'
+import { DigitrafficContext } from "../../context/DigitrafficContext";
+import { Text } from "react-native-paper";
 
 export default function StationInfoScreen() {
+    const {getStationName} = useContext(DigitrafficContext)
     const {stationShort} = useLocalSearchParams();
 
     return(
         <View>
-            <Text>{stationShort}</Text>
-            <Text>Näkymässä ollaan</Text>
+            <Text variant="headlineSmall">{getStationName(stationShort)}</Text>
             <StationTrainList stationShort={stationShort.toString()}/>
         </View>
     )

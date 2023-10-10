@@ -5,6 +5,7 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { DigitrafficProvider } from '../context/DigitrafficContext';
+import { PaperProvider } from 'react-native-paper';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,10 +50,12 @@ function RootLayoutNav() {
   return (
     <DigitrafficProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <PaperProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="station/[stationShort]" options={{ presentation: "modal", title: "Asematiedot" }} />
+          <Stack.Screen name="station/[stationShort]" options={{ presentation: "modal", title: "Junat 24h" }} />
         </Stack>
+        </PaperProvider>
       </ThemeProvider>
     </DigitrafficProvider>
   );

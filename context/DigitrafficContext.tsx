@@ -1,5 +1,5 @@
 import React, {createContext, useState, useEffect} from 'react';
-import { Train } from '../constants/trainData';
+import { TimeTableRow, Train } from '../constants/trainData';
 
 interface Props {
     children: React.ReactNode
@@ -34,12 +34,26 @@ export const DigitrafficProvider : React.FC<Props> = (props : Props) : React.Rea
     }
 
     const fetchTrains = async (stationShort : string) : Promise<Train[]> => {
-        const fetchResult = await fetch(`${ApiUrl}live-trains/station/${stationShort}?minutes_before_departure=1440&minutes_after_departure=0&minutes_before_arrival=100&minutes_after_arrival=0&train_categories=Commuter,Long-distance`);
+        const fetchResult = await fetch(`${ApiUrl}live-trains/station/${stationShort}?minutes_before_departure=1440&minutes_after_departure=0&minutes_before_arrival=0&minutes_after_arrival=0&train_categories=Commuter,Long-distance`);
         let fetchedTrains = await fetchResult.json();
         console.log(fetchedTrains.length)
-        setTrains(fetchedTrains);
+        setTrains(sortTrains(fetchedTrains, stationShort));
         return fetchedTrains;
     }
+
+    const sortTrains = (trainsToSort : Train[], stationShort : string) => {
+        return [...trainsToSort].sort((train1 : Train, train2 :Train) => {
+            let stop1 = train1.timeTableRows.find((timeTable : TimeTableRow) => timeTable.stationShortCode === stationShort && timeTable.type === "DEPARTURE")?.scheduledTime
+            let stop2 = train2.timeTableRows.find((timeTable : TimeTableRow) => timeTable.stationShortCode === stationShort && timeTable.type === "DEPARTURE")?.scheduledTime
+            if(stop1 && stop2) {
+                return new Date(stop1).getTime() - new Date(stop2).getTime()
+            } else {
+                return 0
+            }
+            
+        });
+    }
+
 
     const getStationName = (stationShort : string) : string => {
         let matchingStation = stations.find((station : Station) => station.stationShortCode === stationShort);
