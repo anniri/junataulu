@@ -5,9 +5,11 @@ import {Pressable, ScrollView, View} from 'react-native';
 import { Link, router } from 'expo-router';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { useTheme } from 'react-native-paper';
+import { FavoritesContext } from '../context/FavoritesContext';
 
 const StationList : React.FC = () : React.ReactElement => {
     const {stations, setTrains} = useContext(DigitrafficContext);
+    const {favoriteStations, addFavoriteStation, deleteFavoriteStation} = useContext(FavoritesContext);
     const [stationNameFilter, setStationNameFilter] = useState<string>("")
     const theme = useTheme();
 
@@ -17,6 +19,14 @@ const StationList : React.FC = () : React.ReactElement => {
 
         //Station info is rendered in modal view.
         router.push(`/station/${stationShort}`);
+    }
+
+    const toggleFavorite = (stationShort : string) : void => {
+        if(favoriteStations.includes(stationShort)) {
+            deleteFavoriteStation(stationShort);
+        } else {
+            addFavoriteStation(stationShort);
+        }
     }
 
     return (
@@ -44,7 +54,12 @@ const StationList : React.FC = () : React.ReactElement => {
                                     <Text variant="titleMedium">{station.stationName}</Text>
                                 </TouchableHighlight>
                             )}}
-                            right={() => <List.Icon icon="star-outline"/>}
+                            right={() => <Pressable onPress={() => toggleFavorite(station.stationShortCode)}> 
+                                        <List.Icon 
+                                            icon={(favoriteStations.includes(station.stationShortCode) ? "star-check" : "star-outline")}
+                                            
+                                        />
+                                        </Pressable>}
                         />
                     )
                 })}
