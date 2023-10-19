@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { DigitrafficProvider } from '../context/DigitrafficContext';
 import { PaperProvider } from 'react-native-paper';
+import { FavoritesProvider } from '../context/FavoritesContext';
+
 
 export {
   // Catch any errors thrown by the Layout component.
