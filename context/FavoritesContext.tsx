@@ -18,30 +18,34 @@ export const FavoritesProvider : React.FC<Props> = (props : Props) : React.React
                 setFavoriteStations(JSON.parse(favorites));
             }
         } catch (e) {
-            
+            console.log(e)
         }
     }
 
-    const addFavoriteStation = async (stationShort : string) : Promise<void> => {
-        try {
-            setFavoriteStations([...favoriteStations, stationShort]);
-            await AsyncStorage.setItem("fav-stations", JSON.stringify(favoriteStations));
-        } catch (e) {    
-        }
+    const addFavoriteStation = (stationShort : string) : void => {
+        setFavoriteStations([...favoriteStations, stationShort]);
     }
 
-    const deleteFavoriteStation = async (stationShort : string) => {
+    const deleteFavoriteStation =  (stationShort : string) : void => {
+        setFavoriteStations(favoriteStations.filter((station : string) => station !== stationShort));
+    }
+
+    const saveFavorites = async () : Promise<void> => {
         try {
-            setFavoriteStations(favoriteStations.filter((station : string) => station !== stationShort));
             await AsyncStorage.setItem("fav-stations", JSON.stringify(favoriteStations));
         } catch (e) {
-            
+            console.log(e)
         }
     }
 
     useEffect(() => {
         getFavoriteStations();
     }, [])
+
+    //Each time favorites are changed, the updated value is stored into local storage.
+    useEffect(() => {
+        saveFavorites();
+    }, [favoriteStations])
 
     return (
         <FavoritesContext.Provider value={{favoriteStations, addFavoriteStation, deleteFavoriteStation}}>

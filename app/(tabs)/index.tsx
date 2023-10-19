@@ -7,9 +7,7 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Home</Text>
-      <FavoritesProvider>
         <FavoriteStationsList />
-      </FavoritesProvider>
     </View>
   );
 }

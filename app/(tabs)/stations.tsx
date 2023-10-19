@@ -5,9 +5,7 @@ import { FavoritesProvider } from "../../context/FavoritesContext"
 export default function StationsScreen() {
     return (
         <View>
-            <FavoritesProvider>
-                <StationList />
-            </FavoritesProvider>          
+                <StationList />        
         </View>
     )
 }
