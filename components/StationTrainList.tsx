@@ -22,7 +22,6 @@ const StationTrainList : React.FC<Props> = ({stationShort}: {stationShort : stri
 
     useEffect(() => {
         fetchTrains(stationShort);
-        console.log("Suosikit tässä: " + favoriteStations)
     }, [])
 
     useEffect(() => {
@@ -50,27 +49,26 @@ const StationTrainList : React.FC<Props> = ({stationShort}: {stationShort : stri
         return trainName;
     }
 
-    const getStoppingStations = () : void => {
-
-    }
-
-    const toggleStationFilter = (stationShort : string) : void => {
-        if(stationFilters.includes(stationShort)) {
-            setStationFilters(stationFilters.filter((station : string) => station !== stationShort));
+    //Favorite station Chip components call this function.
+    //When pressing the chip, the station is added or removed from filter options.
+    const toggleStationFilter = (favStationShort : string) : void => {
+        if(stationFilters.includes(favStationShort)) {
+            setStationFilters(stationFilters.filter((station : string) => station !== favStationShort));
         } else {
-            setStationFilters([...stationFilters, stationShort]);
+            setStationFilters([...stationFilters, favStationShort]);
         }
     }
 
     const filterTrains = () : void => {
-        setFilteredTrains(trains.filter((train : Train) => {
-            if(stationFilters.length > 0) {
+        if(stationFilters.length > 0) {  
+            setFilteredTrains(trains.filter((train : Train) => {
                 let stationStop = train.timeTableRows.find((row : TimeTableRow) => stationFilters.includes(row.stationShortCode) && row.commercialStop)
-               return Boolean(stationStop);
-            } else {
-                return true;
-            }
-        }))
+                return Boolean(stationStop);
+            }))
+        } else {
+            //If no filters are selected, list of all the trains is shown.
+            setFilteredTrains(trains);
+        }
     }
 
 

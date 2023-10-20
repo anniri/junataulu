@@ -7,7 +7,7 @@ import { List, Text, useTheme } from "react-native-paper";
 import {TouchableHighlight} from "react-native";
 
 const FavoriteStationsList : React.FC = () : React.ReactElement => {
-    const {setTrains, stations} = useContext(DigitrafficContext);
+    const {setTrains, getStationName} = useContext(DigitrafficContext);
     const {favoriteStations} = useContext(FavoritesContext);
     const theme = useTheme();
 
@@ -21,23 +21,20 @@ const FavoriteStationsList : React.FC = () : React.ReactElement => {
     return (
         <ScrollView>
             <List.Section>
-                {favoriteStations.map((stationShort : string) => {
-                    let station : Station = stations.find((station : Station) => station.stationShortCode === stationShort);
-                    return (station !== undefined) 
-                        ? <List.Item
-                        key={station.stationShortCode} 
+                {favoriteStations.map((stationShort : string) => { 
+                    return <List.Item
+                        key={stationShort}
                         title={() => {return(
-                            <TouchableHighlight 
-                                activeOpacity={0.5} 
-                                underlayColor={theme.colors.secondaryContainer} 
+                            <TouchableHighlight
+                                activeOpacity={0.5}
+                                underlayColor={theme.colors.secondaryContainer}
                                 style={{minHeight: 30, padding: 5, justifyContent: "center"}}
-                                onPress={() => openStation(station.stationShortCode)}
-                            >   
-                                <Text variant="titleMedium">{station.stationName}</Text>
+                                onPress={() => openStation(stationShort)}
+                            >
+                                <Text variant="titleMedium">{getStationName(stationShort)}</Text>
                             </TouchableHighlight>
                         )}}
-                        />
-                        : <Text key={stationShort}>{stationShort}</Text>
+                    />
                 })}
             </List.Section>
         </ScrollView>

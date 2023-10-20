@@ -38,7 +38,6 @@ export const DigitrafficProvider : React.FC<Props> = (props : Props) : React.Rea
         let fetchedTrains = await fetchResult.json();
         console.log(fetchedTrains.length)
         setTrains(sortTrains(fetchedTrains, stationShort));
-        console.log("jippii")
         return fetchedTrains;
     }
 
