@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
 import { Text, View } from '../../components/Themed';
-import { FavoritesProvider } from '../../context/FavoritesContext';
 import FavoriteStationsList from '../../components/FavoriteStationsList';
 
 export default function TabOneScreen() {

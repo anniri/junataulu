@@ -51,6 +51,7 @@ function RootLayoutNav() {
 
   return (
     <DigitrafficProvider>
+      <FavoritesProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <PaperProvider>
         <Stack>
@@ -59,6 +60,7 @@ function RootLayoutNav() {
         </Stack>
         </PaperProvider>
       </ThemeProvider>
+      </FavoritesProvider>
     </DigitrafficProvider>
   );
 }
