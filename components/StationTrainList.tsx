@@ -1,11 +1,11 @@
 import {useContext, useEffect, useState} from 'react';
 import { DigitrafficContext } from '../context/DigitrafficContext';
 import { TimeTableRow, Train } from '../constants/trainData';
-import { Button, List, Modal, Portal } from 'react-native-paper';
+import { Button, Chip, List, Modal, Portal, Text } from 'react-native-paper';
 import { FlatList, ScrollView, TouchableOpacity, View } from 'react-native';
-import { Text } from './Themed';
 import TrainListItem, { TrainStopData } from './TrainListItem';
 import TrainTimeTable from './TrainTimeTable';
+import { FavoritesContext } from "../context/FavoritesContext";
 
 interface Props {
     stationShort: string
@@ -13,12 +13,22 @@ interface Props {
 
 const StationTrainList : React.FC<Props> = ({stationShort}: {stationShort : string}) : React.ReactElement => {
     const {fetchTrains, trains, getStationName} = useContext(DigitrafficContext);
+    const {favoriteStations} = useContext(FavoritesContext);
     const [showTrainModal, setShowTrainModal] = useState<boolean>(false);
     const [activeTrain, setActiveTrain] = useState<Train>();
+    const [filteredTrains, setFilteredTrains] = useState<Train[]>([...trains]);
     
+    const [stationFilters, setStationFilters] = useState<string[]>([]);
+
     useEffect(() => {
         fetchTrains(stationShort);
+        console.log("Suosikit tässä: " + favoriteStations)
     }, [])
+
+    useEffect(() => {
+        filterTrains();
+    }, [trains, stationFilters])
+
 
     //Triggers modal for displaying single train's timetable.
     const openTrainView = (train : Train) : void => {
@@ -38,6 +48,29 @@ const StationTrainList : React.FC<Props> = ({stationShort}: {stationShort : stri
             trainName = `${train.trainType} ${train.trainNumber}`
         }
         return trainName;
+    }
+
+    const getStoppingStations = () : void => {
+
+    }
+
+    const toggleStationFilter = (stationShort : string) : void => {
+        if(stationFilters.includes(stationShort)) {
+            setStationFilters(stationFilters.filter((station : string) => station !== stationShort));
+        } else {
+            setStationFilters([...stationFilters, stationShort]);
+        }
+    }
+
+    const filterTrains = () : void => {
+        setFilteredTrains(trains.filter((train : Train) => {
+            if(stationFilters.length > 0) {
+                let stationStop = train.timeTableRows.find((row : TimeTableRow) => stationFilters.includes(row.stationShortCode) && row.commercialStop)
+               return Boolean(stationStop);
+            } else {
+                return true;
+            }
+        }))
     }
 
 
@@ -91,9 +124,27 @@ const StationTrainList : React.FC<Props> = ({stationShort}: {stationShort : stri
                 </View>
             </Modal>
             </Portal>
+            <View>
+                    <Text>Suosikkiaseman kautta:</Text>
+                        <ScrollView horizontal>
+                        {favoriteStations.map((station : string) => {
+                            if(station !== stationShort) {
+                                return  <Chip 
+                                key={station} 
+                                style={{marginHorizontal: 1}}
+                                selected={stationFilters.includes(station)}
+                                onPress={() => toggleStationFilter(station)}
+                                >
+                                    {getStationName(station)}
+                                </Chip>
+                            }
+                        })}
+                        </ScrollView>
+
+            </View>
             {(trains.length > 0) 
             ? <FlatList 
-                data={trains}
+                data={filteredTrains}
                 renderItem={({item}) => {return (
                                                 <TouchableOpacity onPress={() => openTrainView(item)}>
                                                     <TrainListItem trainStopData={formTrainStopData(item)} />
