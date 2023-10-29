@@ -1,7 +1,6 @@
-import StationList from "../../components/StationList"
 import {Text, View } from "../../components/Themed"
 
-export default function StationsScreen() {
+export default function InfoScreen() {
     return (
         <View>
             <Text>Liikennetietojen lähde:</Text>

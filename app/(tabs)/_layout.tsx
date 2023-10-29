@@ -43,6 +43,13 @@ export default function TabLayout() {
           tabBarIcon: ({color}) => <TabBarIcon name="info" color={color}/>
         }}
       />
+      <Tabs.Screen 
+        name="timetables"
+        options={{
+          title: "Omat aikataulut",
+          tabBarIcon: ({color}) => <TabBarIcon name="clock-o" color={color} />
+        }}
+      />
     </Tabs>
   );
 }
