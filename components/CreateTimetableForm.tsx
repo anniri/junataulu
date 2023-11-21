@@ -1,11 +1,17 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, SetStateAction, Dispatch } from "react";
 import { View } from "react-native";
 import { Button, RadioButton, TextInput } from "react-native-paper";
 import { DigitrafficContext, Station } from "../context/DigitrafficContext";
+import { FavoritesContext } from "../context/FavoritesContext";
 
-const CreateTimetableForm : React.FC = () : React.ReactElement => {
+interface Props {
+    closeForm: Function
+}
+
+const CreateTimetableForm : React.FC<Props> = (props) : React.ReactElement => {
 
     const {stations, getStationName} = useContext(DigitrafficContext);
+    const {addTimetable} = useContext(FavoritesContext);
 
     const [inputStartStation, setInputStartStation] = useState<string>("");
     const [inputDestination, setInputDestination] = useState<string>("");
@@ -23,10 +29,13 @@ const CreateTimetableForm : React.FC = () : React.ReactElement => {
         else return [];
     }
 
+    const createTable = () => {
+        addTimetable(selectedStart, selectedDestination);
+        props.closeForm()
+    }
+
     useEffect(() => {
-        console.log("Effectissä")
         if(inputStartStation.length >= 2) {
-            console.log("Haetaan asemat")
             setStartOptions(getMatchingStations(inputStartStation));
         }
     }, [inputStartStation]);
@@ -59,7 +68,22 @@ const CreateTimetableForm : React.FC = () : React.ReactElement => {
                 value={inputDestination}
                 onChangeText={(text) => setInputDestination(text)}
             />
-            <Button disabled={selectedDestination.length > 0 && selectedStart.length > 0}>Lisää taulu</Button>
+            {(destinationOptions.length > 0)
+                ? <RadioButton.Group onValueChange={(value) => setSelectedDestination(value)} value={selectedDestination}>
+                {destinationOptions.map((stationShort : string) => <RadioButton.Item 
+                                                                    label={getStationName(stationShort)} 
+                                                                    value={stationShort} 
+                                                                    key={stationShort}
+                                                                    /> 
+                                                            )}
+                </RadioButton.Group>
+                : null}
+            <Button 
+                disabled={selectedDestination.length == 0 || selectedStart.length == 0}
+                onPress={createTable}
+            >    
+                Lisää taulu
+            </Button>
         </View>
     )
 }

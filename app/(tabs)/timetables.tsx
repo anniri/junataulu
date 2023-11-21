@@ -1,10 +1,14 @@
 import {Button, Modal, Portal, Text } from "react-native-paper"
 import { View } from "react-native"
-import { useState } from "react"
+import { useState, useContext } from "react"
 import CreateTimetableForm from "../../components/CreateTimetableForm"
+import { FavoritesContext, SavedTimetable } from "../../context/FavoritesContext"
+import { DigitrafficContext } from "../../context/DigitrafficContext"
 
 export default function CustomTimetablesScreen() {
-    const [showModal, setShowModal] = useState<boolean>(false)
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const {savedTimetables} = useContext(FavoritesContext);
+    const {getStationName} = useContext(DigitrafficContext);
 
     return (
         <View>
@@ -16,11 +20,18 @@ export default function CustomTimetablesScreen() {
                 >
                     <View style={{flex: 1}}>
                     <Button onPress={() => setShowModal(false)}>Sulje</Button>
-                    <CreateTimetableForm />
+                    <CreateTimetableForm closeForm={() => setShowModal(false)} />
                     </View>
                 </Modal>
             </Portal>
-            <Text>Etusivun aikataulut</Text>
+            <Text>Tallennetut aikataulunäkymät:</Text>
+            {(savedTimetables.length > 0)
+            ? <View>
+                {savedTimetables.map((timetable : SavedTimetable) => <Text key={`${timetable.start}+${timetable.destination}`}>
+                                                                        {getStationName(timetable.start)}-{getStationName(timetable.destination)}
+                                                                    </Text>)}
+            </View>
+            : null}
             <Button onPress={() => setShowModal(true)}>Lisää taulu</Button>
         </View>
     )
